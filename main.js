@@ -45,6 +45,18 @@ exports.createClient = function(port, host, options) {
 
   cl.duplicate = exports.createClient;
 
+  var real_on = cl.on;
+  cl.on = function(eventName, callback) {
+    switch(eventName) {
+      case 'end':
+      case 'ready':
+        setTimeout(callback.bind(cl), 0);
+        break;
+      default:
+        real_on.apply(cl, arguments);
+    }
+  };
+
   // Replace the mocked create_stream function again with the original one
   RedisClient.prototype.create_stream = real_create_stream;
 
