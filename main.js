@@ -43,6 +43,8 @@ exports.createClient = function(port, host, options) {
 
   var cl = new RedisClient(/* options */)
 
+  cl.duplicate = exports.createClient;
+
   // Replace the mocked create_stream function again with the original one
   RedisClient.prototype.create_stream = real_create_stream;
 
